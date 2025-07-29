@@ -1,0 +1,17 @@
+from sqlalchemy import Column, BIGINT, String
+from src.models.sqlite.settings.base import Base
+
+class PersonPf(Base):
+    __tablename__ = "person_pf"
+
+    id = Column(BIGINT, primary_key=True)
+    renda_mensal = Column(BIGINT, nullable=False)
+    idade = Column(BIGINT, nullable=False)
+    nome_completo = Column(String, nullable=False)
+    celular = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    categoria = Column(String, nullable=False)
+    saldo = Column(BIGINT, nullable=False)
+
+    def __repr__(self):
+        return f"<PersonPf(id={self.id}, nome_completo='{self.nome_completo}', renda_mensal={self.renda_mensal})>"
