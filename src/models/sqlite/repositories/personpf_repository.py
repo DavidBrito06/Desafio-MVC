@@ -1,4 +1,8 @@
 from src.models.sqlite.entites.person_pf import PersonPf
+from sqlalchemy.orm.exc import NoResultFound
+from typing import List
+
+
 class PersonPfRepository:
     def __init__(self, db_connection):
         self.__db_connection = db_connection
@@ -20,3 +24,12 @@ class PersonPfRepository:
             except Exception as e:
                 database.session.rollback()
                 print(f"Error inserting PersonPf: {e}")
+            
+
+    def list_person_pf(self) -> List[PersonPf]:
+        with self.__db_connection as database:
+            try:
+                person = database.session.query(PersonPf).all()
+                return person
+            except NoResultFound:
+                return []
