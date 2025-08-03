@@ -1,9 +1,10 @@
 from src.models.sqlite.entites.person_pj import PersonPj
 from typing import List
 from sqlalchemy.orm.exc import NoResultFound
+from src.models.sqlite.interfaces.personpj_interface import PersonPjInterface
 
-class PersonPjRepository:
-    LIMITE_SAQUE_PJ = 1000.00  # Limite de saque para Pessoa Jurídica
+class PersonPjRepository(PersonPjInterface):
+    LIMITE_DE_SAQUE = 10000.00  # Limite de saque para Pessoa Jurídica
     def __init__(self, db_connection):
         self.__db_connection = db_connection
 
@@ -36,57 +37,25 @@ class PersonPjRepository:
                 return []
 
     def sacar_dinheiro(self, cliente_id: int, valor: float) -> bool:
-        if valor <= 0:
-            print("Valor para saque deve ser positivo.")
-            return False
-    
-        if valor > self.LIMITE_SAQUE_PJ:
-            print(f"Saque de R${valor:.2f} excede o limite permitido para PJ.")
-            return False
-    
         with self.__db_connection as database:
-            try:
-                person = database.session.query(PersonPj).filter(PersonPj.id == cliente_id).first()
-                
-                if not person:
-                    print(f"Cliente PJ com ID {cliente_id} não encontrado.")
-                    return False
-
-                if person.saldo < valor:
-                    print("Saldo insuficiente para saque.")
-                    return False
-                
-                person.saldo -= valor
-                database.session.commit()
-                print(f"Saque de R${valor:.2f} realizado para cliente ID {cliente_id}. Novo saldo: R${person.saldo:.2f}")
-                return True
-            except Exception as e:
-                database.session.rollback()
-                print(f"Erro ao sacar: {e}")
+            if valor > self.LIMITE_DE_SAQUE:
+                print("❌ Saque negado: valor excede o limite para pessoa física.")
                 return False
-
-                
-             
-    def realizar_extrato(self, cliente_id: int) -> str:
+            try:
+                cliente = database.session.query(PersonPj).filter_by(id=cliente_id).one()
+                if cliente.saldo >= valor:
+                    cliente.saldo -= valor
+                    database.session.commit()
+                    return True
+                return False
+            except NoResultFound:
+                return False
+            
+    
+    def extrato(self, cliente_id: int) -> PersonPj:
         with self.__db_connection as database:
             try:
-                person = database.session.query(PersonPj).filter(PersonPj.id == cliente_id).first()
-
-                if not person:
-                    return f"Cliente PJ com ID {cliente_id} não encontrado."
-
-                extrato = (
-                    f"Extrato do Cliente PJ:\n"
-                    f"ID: {person.id}\n"
-                    f"Nome Fantasia: {person.nome_fantasia}\n"
-                    f"Faturamento: R${person.faturamento:.2f}\n"
-                    f"Idade: {person.idade} anos\n"
-                    f"Celular: {person.celular}\n"
-                    f"E-mail Corporativo: {person.email_corporativo}\n"
-                    f"Categoria: {person.categoria}\n"
-                    f"Saldo Atual: R${person.saldo:.2f}\n"
-                )
-                return extrato
-            except Exception as e:
-                print(f"Erro ao realizar extrato: {e}")
-                return "Erro ao realizar extrato."
+                cliente = database.session.query(PersonPj).filter_by(id=cliente_id).one()
+                return cliente
+            except NoResultFound:
+                return None

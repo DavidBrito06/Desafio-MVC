@@ -2,6 +2,7 @@ from unittest import mock
 from sqlalchemy.orm.exc import NoResultFound
 from src.models.sqlite.entites.person_pj import PersonPj
 from .personpj_repository import PersonPjRepository
+from unittest.mock import MagicMock
 
 
 class MockConnection:
@@ -72,3 +73,37 @@ def test_list_person_pj():
     assert isinstance(response, list)
     assert len(response) == 2
     assert response[0].nome_fantasia == "Empresa Teste"
+
+
+def test_sacar_dinheiro():
+    # Mock da conexão e da sessão
+    mock_connection = MockConnection()
+    repo = PersonPjRepository(mock_connection)
+
+    # Configura o retorno do método query().filter_by().one() para um objeto mock com saldo real
+    cliente_mock = MagicMock()
+    cliente_mock.saldo = 150.0  # saldo maior que o valor para teste
+    mock_connection.session.query.return_value.filter_by.return_value.one.return_value = cliente_mock
+
+    resultado = repo.sacar_dinheiro(cliente_id=1, valor=100.0)
+    assert resultado == True
+    print(cliente_mock.saldo)  # Deve ser 50.0 após o saque
+
+from unittest.mock import MagicMock
+
+def test_extrato():
+    mock_connection = MockConnection()
+    repo = PersonPjRepository(mock_connection)
+
+    # Criando um cliente mock com atributos reais
+    cliente_mock = MagicMock()
+    cliente_mock.nome_fantasia = "Empresa Teste"
+    cliente_mock.saldo = 200.0
+
+    # Configurando a cadeia de chamadas para retornar o cliente_mock
+    mock_connection.session.query.return_value.filter_by.return_value.one.return_value = cliente_mock
+
+    response = repo.extrato(cliente_id=1)
+
+    assert response.nome_fantasia == "Empresa Teste"
+    assert response.saldo == 200.0

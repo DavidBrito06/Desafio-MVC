@@ -1,9 +1,11 @@
 from src.models.sqlite.entites.person_pf import PersonPf
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
+from src.models.sqlite.interfaces.personpf_interface import PersonPfInterface
 
 
-class PersonPfRepository:
+class PersonPfRepository(PersonPfInterface):
+    LIMITE_DE_SAQUE = 1000.00
     def __init__(self, db_connection):
         self.__db_connection = db_connection
     
@@ -33,3 +35,27 @@ class PersonPfRepository:
                 return person
             except NoResultFound:
                 return []
+    
+    def sacar_dinheiro(self, cliente_id: int, valor: float) -> bool:
+        with self.__db_connection as database:
+            if valor > self.LIMITE_DE_SAQUE:
+                print("❌ Saque negado: valor excede o limite para pessoa física.")
+                return False
+            try:
+                cliente = database.session.query(PersonPf).filter_by(id=cliente_id).one()
+                if cliente.saldo >= valor:
+                    cliente.saldo -= valor
+                    database.session.commit()
+                    return True
+                return False
+            except NoResultFound:
+                return False
+            
+    
+    def extrato(self, cliente_id: int) -> PersonPf:
+        with self.__db_connection as database:
+            try:
+                cliente = database.session.query(PersonPf).filter_by(id=cliente_id).one()
+                return cliente
+            except NoResultFound:
+                return None
