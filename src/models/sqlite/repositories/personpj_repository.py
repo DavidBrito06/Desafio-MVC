@@ -1,9 +1,9 @@
 from src.models.sqlite.entites.person_pj import PersonPj
 from typing import List
 from sqlalchemy.orm.exc import NoResultFound
-from src.models.sqlite.interfaces.personpj_interface import PersonPjInterface
+from src.models.sqlite.interfaces.personpj_interface import PersonPjInterfaceRepository
 
-class PersonPjRepository(PersonPjInterface):
+class PersonPjRepository(PersonPjInterfaceRepository):
     LIMITE_DE_SAQUE = 10000.00  # Limite de saque para Pessoa Jurídica
     def __init__(self, db_connection):
         self.__db_connection = db_connection

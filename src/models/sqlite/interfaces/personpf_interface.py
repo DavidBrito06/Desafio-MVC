@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import List
 from src.models.sqlite.entites.person_pf import PersonPf
 
-class PersonPfInterface(ABC):
+class PersonPfInterfaceRepository(ABC):
 
     @abstractmethod
     def sacar_dinheiro(self, cliente_id: int, valor: float) -> bool:
@@ -11,4 +12,14 @@ class PersonPfInterface(ABC):
     @abstractmethod
     def extrato(self, cliente_id: int) -> PersonPf:
         """Retorna o extrato da conta do cliente."""
+        pass
+
+    @abstractmethod
+    def insert_person_pf(self, renda_mensal: float, idade: int, nome_completo: str, celular: str, email: str, categoria: str, saldo: float) -> None:
+        """Insere um novo cliente pessoa física no banco de dados."""
+        pass
+
+    @abstractmethod
+    def list_person_pf(self) -> List[PersonPf]:
+        """Lista todos os clientes pessoa física cadastrados."""
         pass

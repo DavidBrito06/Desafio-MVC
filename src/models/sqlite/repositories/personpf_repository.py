@@ -1,10 +1,10 @@
 from src.models.sqlite.entites.person_pf import PersonPf
 from sqlalchemy.orm.exc import NoResultFound
 from typing import List
-from src.models.sqlite.interfaces.personpf_interface import PersonPfInterface
+from src.models.sqlite.interfaces.personpf_interface import PersonPfInterfaceRepository
 
 
-class PersonPfRepository(PersonPfInterface):
+class PersonPfRepository(PersonPfInterfaceRepository):
     LIMITE_DE_SAQUE = 1000.00
     def __init__(self, db_connection):
         self.__db_connection = db_connection
