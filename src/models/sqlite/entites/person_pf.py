@@ -2,7 +2,7 @@ from sqlalchemy import Column, BIGINT, String
 from src.models.sqlite.settings.base import Base
 
 class PersonPf(Base):
-    __tablename__ = "person_pf"
+    __tablename__ = "pessoa_fisica"
 
     id = Column(BIGINT, primary_key=True)
     renda_mensal = Column(BIGINT, nullable=False)

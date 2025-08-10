@@ -2,7 +2,7 @@ from sqlalchemy import Column, BIGINT, String
 from src.models.sqlite.settings.base import Base
 
 class PersonPj(Base):
-    __tablename__ = "person_pj"
+    __tablename__ = "pessoa_juridica"
 
     id = Column(BIGINT, primary_key=True)
     faturamento = Column(BIGINT, nullable=False)
