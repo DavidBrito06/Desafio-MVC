@@ -15,10 +15,10 @@ class PersonPjInterfaceRepository(ABC):
         pass
 
     @abstractmethod
-    def insert_person_pf(self, renda_mensal: float, idade: int, nome_completo: str, celular: str, email: str, categoria: str, saldo: float) -> None:
-        """Insere um novo cliente pessoa física no banco de dados."""
+    def insert_person_pj(self, faturamento: int, idade: int, nome_fantasia: str, celular: str, email_corporativo: str, categoria: str, saldo: float) -> None:
+        """Insere um novo cliente pessoa jurídica no banco de dados."""
         pass
 
-    def list_person_pf(self) -> List[PersonPj]:
-        """Lista todos os clientes pessoa física."""
+    def list_person_pj(self) -> List[PersonPj]:
+        """Lista todos os clientes pessoa jurídica."""
         pass

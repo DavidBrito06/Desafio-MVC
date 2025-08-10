@@ -1,7 +1,8 @@
 from src.models.sqlite.interfaces.personpj_interface import PersonPjInterfaceRepository
 from typing import Dict
+from src.controller.interface.person_pj_creator_controller import PersonPjCreatorControllerInterface
 
-class PersonPjCreator:
+class PersonPjCreator(PersonPjCreatorControllerInterface):
     def __init__(self, personpj_repository: PersonPjInterfaceRepository):
         self.personpj_repository = personpj_repository
 
