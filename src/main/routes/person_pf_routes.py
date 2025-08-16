@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from src.view.http_types.http_request import HttpRequest
 
+from src.main.composer.person_pf_list_composer import person_pf_list_composer
 from src.main.composer.person_pf_creator_composer import person_pf_creator_composer
 
 persor_pf_route_bp = Blueprint('persor_pf_route', __name__)
@@ -15,4 +16,19 @@ def creator_pf_person():
         return jsonify(http_response.body), http_response.status_code
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@persor_pf_route_bp.route('/personpf', methods=['GET'])
+def list_pf_person():
+    try:
+        http_request = HttpRequest()
+        view = person_pf_list_composer()
+        http_response = view.handle(http_request)
+
+        return jsonify(http_response.body), http_response.status_code
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
+
+
         

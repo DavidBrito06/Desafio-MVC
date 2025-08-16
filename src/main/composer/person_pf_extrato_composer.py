@@ -3,7 +3,7 @@ from src.models.sqlite.repositories.personpf_repository import PersonPfRepositor
 from src.controller.person_pf_extrato import PersonPfExtratoController
 from src.view.person_pf_extrato_view import PersonPfExtratoView
 
-def person_pf_creator_composer():
+def person_pf_extrato_composer():
     model = PersonPfRepository(db_connection_handler)
     controller = PersonPfExtratoController(model)
     view = PersonPfExtratoView(controller) 

@@ -29,7 +29,7 @@ class PersonPfListController(PersonPfListControllerInterface):
                 "categoria": person.categoria,
                 "saldo": person.saldo
             })
-            return {
+        return{
                 "data":{
                     "type":"personpf",
                     "attributes": formatted_personpf,

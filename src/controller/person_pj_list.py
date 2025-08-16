@@ -28,7 +28,7 @@ class PersonPjListController(PersonPjListControllerInterface):
                 "categoria": person.categoria,
                 "saldo": person.saldo
             })
-            return {
+        return {
                 "data":{
                     "type":"personpj",
                     "attributes": formatted_personpj,
