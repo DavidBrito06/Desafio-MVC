@@ -8,7 +8,7 @@ class PersonPfExtratoView(ViewInterface):
         self.__controller = controller
     
     def handle(self, http_request: HttpRequest):
-        cliente_id = http_request.param("cliente_id")
+        cliente_id = http_request.param["cliente_id"]
         extrato = self.__controller.extrato(cliente_id)
 
         return HttpResponse(status_code=200, body=extrato)

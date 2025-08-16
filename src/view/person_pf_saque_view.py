@@ -6,30 +6,21 @@ from src.view.interfaces.view_interface import ViewInterface
 class PersonPfSaqueView(ViewInterface):
     def __init__(self, controller: PersonPfSaqueControllerInterface):
         self.__controller = controller
-    
-    def handle(self, http_request: HttpRequest) -> HttpResponse:
-        # Pega dados do corpo da requisição
-        cliente_id = http_request.body.get("cliente_id")
-        valor = http_request.body.get("valor")
 
-        # Validação simples
+    def handle(self, http_request: HttpRequest) -> HttpResponse:
+        cliente_id = http_request.param.get("cliente_id") or (http_request.body.get("cliente_id") if http_request.body else None)
+        valor = http_request.body.get("valor") if http_request.body else None
+
         if cliente_id is None or valor is None:
             return HttpResponse(
                 status_code=400,
-                body={"error": "Parâmetros 'cliente_id' e 'valor' são obrigatórios"}
+                body={"errors": {"message": "Parâmetros 'cliente_id' e 'valor' são obrigatórios"}}
             )
 
-        # Chama o controller para processar o saque
-        sucesso = self.__controller.saque(cliente_id, valor)
+        resultado = self.__controller.saque(cliente_id, valor)
+        status_code = 400 if "errors" in resultado else 200
 
-        # Retorna resposta
-        if sucesso:
-            return HttpResponse(
-                status_code=200,
-                body={"message": "Saque realizado com sucesso"}
-            )
-        else:
-            return HttpResponse(
-                status_code=400,
-                body={"error": "Saldo insuficiente ou operação inválida"}
-            )
+        return HttpResponse(
+            status_code=status_code,
+            body=resultado
+        )

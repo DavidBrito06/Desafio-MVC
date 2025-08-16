@@ -3,7 +3,7 @@ from src.models.sqlite.repositories.personpj_repository import PersonPjRepositor
 from src.controller.person_pj_saque import PersonPjSaqueController
 from src.view.person_pj_saque_view import PersonPjSaqueView
 
-def person_pf_saque_composer():
+def person_pj_saque_composer():
     model = PersonPjRepository(db_connection_handler)
     controller = PersonPjSaqueController(model)
     view = PersonPjSaqueView(controller) 
